@@ -22,6 +22,8 @@ app.use(
   })
 );
 
+app.get("/api", (req, res) => res.send("OK"));
+
 function runServer(port = PORT) {
   const server = app
     .listen(port, () => {
