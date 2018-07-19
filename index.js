@@ -6,7 +6,7 @@ const morgan = require('morgan');
 
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
-// const {dbConnect} = require('./db-knex');
+const { router: jobsRouter } = require('./jobs/router');
 
 const app = express();
 
@@ -16,11 +16,20 @@ app.use(
   })
 );
 
+// CORS
 app.use(
   cors({
     origin: CLIENT_ORIGIN
   })
 );
+
+// ROUTERS
+app.use('/api/movies/', moviesRouter);
+
+// basic GET request
+app.get("*", (req, res) => {
+  res.status(404).json({ message: "not found" });
+});
 
 app.get("/api", (req, res) => res.send("OK"));
 
