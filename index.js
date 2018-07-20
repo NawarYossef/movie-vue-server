@@ -6,7 +6,7 @@ const morgan = require('morgan');
 
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
-const { router: jobsRouter } = require('./jobs/router');
+const { router: jobsRouter } = require('./movies/router');
 
 const app = express();
 
