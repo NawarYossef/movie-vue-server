@@ -4,7 +4,6 @@ const passport = require("passport");
 const router = express.Router();
 const bodyParser = require("body-parser");
 const jsonParser = bodyParser.json();
-
 const { Movie } = require("./model");
 // const jwtAuth = passport.authenticate("jwt", { session: false });
 
@@ -15,10 +14,8 @@ router.get("/", (req, res) => {
   Movie.find()
     // call the `.serialize` instance method we've created in
     // models.js in order to only expose the data we want the API return.
-    .then(movies => {
-      res.json({
-        movies: movies.map(movie => movie.serialize())
-      });
+    .then(data => {
+      res.json(data);
     })
     .catch(err => {
       console.error(err);
@@ -29,7 +26,7 @@ router.get("/", (req, res) => {
 // ============== POST endpoint ==============
 router.post("/", (req, res) => {
   const requiredFields = [
-    "movieId"
+    "movieData"
   ];
 
   for (let i = 0; i < requiredFields.length; i++) {
@@ -42,9 +39,16 @@ router.post("/", (req, res) => {
   }
 
   Movie.create({
-    movieId: req.body.movieId
+    movieData: req.body.movieData,
   })
-    .then(movie => res.status(201).json(movie.serialize()))
+    .then(() => {
+      Movie.find()
+        .then(movies => res.status(201).json(movies))
+        .catch(err => {
+          console.error(err);
+          res.status(500).json({ message: "Internal server error" });
+        });
+    })
     .catch(err => {
       console.error(err);
       res.status(500).json({ error: "Something went wrong" });
@@ -53,7 +57,7 @@ router.post("/", (req, res) => {
 
 // ============== DELETE endpoint ==============
 router.delete("/:id", (req, res) => {
-    Movie.findByIdAndRemove(req.params.id)
+  Movie.findByIdAndRemove(req.params.id)
     .then(() => res.status(204).end())
     .catch(err => res.status(500).json({ message: "Internal server error" }));
 });

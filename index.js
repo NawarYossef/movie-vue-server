@@ -6,7 +6,7 @@ const morgan = require('morgan');
 
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
-const { router: jobsRouter } = require('./movies/router');
+const { router: moviesRouter } = require('./movies/router');
 
 const app = express();
 
@@ -26,11 +26,8 @@ app.use(
 // ROUTERS
 app.use('/api/movies/', moviesRouter);
 
-// basic GET request
-app.get("*", (req, res) => {
-  res.status(404).json({ message: "not found" });
-});
 
+//  GET api
 app.get("/api", (req, res) => res.send("OK"));
 
 function runServer(port = PORT) {
