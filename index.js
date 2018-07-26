@@ -3,10 +3,13 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const passport = require('passport');
 
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 const { router: moviesRouter } = require('./movies/router');
+const { router: usersRouter } = require('./users');
+const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
 console.log('------------------------------------');
 console.log(CLIENT_ORIGIN);
 console.log('------------------------------------');
@@ -25,8 +28,22 @@ app.use(
   })
 );
 
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
 // ROUTERS
 app.use('/api/movies/', moviesRouter);
+app.use('/api/users/', usersRouter);
+app.use('/api/auth/', authRouter);
+
+// A protected endpoint which needs a valid JWT to access it
+const jwtAuth = passport.authenticate('jwt', { session: false });
+
+app.get('/api/protected', jwtAuth, (req, res) => {
+  return res.json({
+    data: 'rosebud'
+  });
+});
 
 
 //  GET api
