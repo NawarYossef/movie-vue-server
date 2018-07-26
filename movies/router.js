@@ -12,8 +12,6 @@ router.use(jsonParser);
 // ============== GET endpoint ==============
 router.get("/", (req, res) => {
   Movie.find()
-    // call the `.serialize` instance method we've created in
-    // models.js in order to only expose the data we want the API return.
     .then(data => {
       res.json(data);
     })

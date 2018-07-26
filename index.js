@@ -7,7 +7,9 @@ const morgan = require('morgan');
 const { PORT, CLIENT_ORIGIN } = require('./config');
 const { dbConnect } = require('./db-mongoose');
 const { router: moviesRouter } = require('./movies/router');
-
+console.log('------------------------------------');
+console.log(CLIENT_ORIGIN);
+console.log('------------------------------------');
 const app = express();
 
 app.use(
