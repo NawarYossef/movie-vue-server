@@ -5,12 +5,12 @@ const router = express.Router();
 const bodyParser = require("body-parser");
 const jsonParser = bodyParser.json();
 const { Movie } = require("./model");
-// const jwtAuth = passport.authenticate("jwt", { session: false });
+const jwtAuth = passport.authenticate("jwt", { session: false });
 
 router.use(jsonParser);
 
 // ============== GET endpoint ==============
-router.get("/", (req, res) => {
+router.get("/", jwtAuth, (req, res) => {
   Movie.find()
     .then(data => {
       res.json(data);
@@ -22,7 +22,7 @@ router.get("/", (req, res) => {
 });
 
 // ============== POST endpoint ==============
-router.post("/", (req, res) => {
+router.post("/", jwtAuth, (req, res) => {
   const requiredFields = [
     "movieData"
   ];
@@ -54,7 +54,7 @@ router.post("/", (req, res) => {
 });
 
 // ============== DELETE endpoint ==============
-router.delete("/:id", (req, res) => {
+router.delete("/:id", jwtAuth, (req, res) => {
   Movie.findByIdAndRemove(req.params.id)
     .then(() => res.status(204).end())
     .catch(err => res.status(500).json({ message: "Internal server error" }));

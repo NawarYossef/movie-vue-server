@@ -21,7 +21,6 @@ router.post('/signup', jsonParser, (req, res) => {
       location: missingField
     });
   }
-
   const stringFields = ['username', 'password'];
   const nonStringField = stringFields.find(
     field => field in req.body && typeof req.body[field] !== 'string'
