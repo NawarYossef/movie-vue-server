@@ -11,7 +11,7 @@ router.use(jsonParser);
 
 // ============== GET endpoint ==============
 router.get("/", jwtAuth, (req, res) => {
-  Movie.find()
+  Movie.find({ user: req.user.id })
     .then(data => {
       res.json(data);
     })
@@ -38,9 +38,10 @@ router.post("/", jwtAuth, (req, res) => {
 
   Movie.create({
     movieData: req.body.movieData,
+    user: req.user.id
   })
     .then(() => {
-      Movie.find()
+      Movie.find({ user: req.user.id })
         .then(movies => res.status(201).json(movies))
         .catch(err => {
           console.error(err);
